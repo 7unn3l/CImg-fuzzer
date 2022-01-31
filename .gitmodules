@@ -1,0 +1,3 @@
+[submodule "src/CImg"]
+	path = src/CImg
+	url = https://github.com/dtschump/CImg
