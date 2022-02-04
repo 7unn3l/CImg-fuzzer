@@ -24,7 +24,7 @@ int CorpusManager::load_file(const fs::path &file){
 
     imgbytes->data = (byte*)malloc(fsize);
     imgbytes->sz = fsize;
-    imgbytes->filename = fullpath.c_str();
+    //imgbytes->filename = fullpath.c_str(); fix this
     
     std::ifstream fd(fullpath.c_str(),std::ios::binary | std::ios::ate);
     fd.seekg(0, std::ios::beg);
