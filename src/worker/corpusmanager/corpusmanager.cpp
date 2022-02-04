@@ -34,6 +34,7 @@ int CorpusManager::load_file(const fs::path &file){
     }else{
         LOG("[-] could not load %s",fullpath.c_str());
     }
+    fd.close();
     return 0;
 }
 
