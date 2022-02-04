@@ -1,9 +1,9 @@
 #include "random.h"
 #include <fstream>
 
-int_fast32_t randomgen::x = 1;
-int_fast32_t randomgen::y = 2;
-int_fast32_t randomgen::z = 3;
+uint_fast32_t randomgen::x = 1;
+uint_fast32_t randomgen::y = 2;
+uint_fast32_t randomgen::z = 3;
 
 void randomgen::seedrand(){
     std::ifstream f("/dev/urandom",std::ios::binary);
@@ -14,8 +14,8 @@ void randomgen::seedrand(){
     f.close();
 }
 
-int_fast32_t randomgen::xorshf96(){
-    int_fast32_t t;
+uint_fast32_t randomgen::xorshf96(){
+    uint_fast32_t t;
     randomgen::x ^= randomgen::x << 16;
     x ^= x >> 5;
     x ^= x << 1;
