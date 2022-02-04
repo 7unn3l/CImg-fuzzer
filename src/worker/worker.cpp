@@ -2,6 +2,7 @@
 #include "conf/fuzzer_conf.h"
 #include "../CImg/CImg.h"
 #include "log/log.h"
+#include "corpusmanager/corpusmanager.h"
 
 using namespace cimg_library;
 
