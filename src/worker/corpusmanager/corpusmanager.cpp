@@ -1,6 +1,7 @@
 #include "corpusmanager.h"
 #include "../conf/fuzzer_conf.h"
 #include "../log/log.h"
+#include "../random/random.h"
 #include <filesystem>
 #include <fstream>
 
@@ -26,6 +27,8 @@ int CorpusManager::load_file(const fs::path &file){
     imgbytes->sz = fsize;
     //imgbytes->filename = fullpath.c_str(); fix this
     
+    corpus.push_back(imgbytes);
+
     std::ifstream fd(fullpath.c_str(),std::ios::binary | std::ios::ate);
     fd.seekg(0, std::ios::beg);
 
@@ -47,4 +50,9 @@ void CorpusManager::load_corpus(){
         }
             
     }
+}
+
+ImageBytes* CorpusManager::get_random_sample(){
+    uint_fast32_t ind = randomgen::xorshf96() % corpus.size();
+    return corpus.at(ind);
 }
