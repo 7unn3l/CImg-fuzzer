@@ -42,8 +42,7 @@ int CorpusManager::load_file(const fs::path &file){
 }
 
 void CorpusManager::load_corpus(){
-    fs::current_path(fs::path(fuzzer_corpus_dir));
-    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator(fs::path("./serpent")))
+    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator(fs::path(fuzzer_corpus_dir)))
     {
         if (dir_entry.is_regular_file()){
             load_file(dir_entry);
