@@ -1,12 +1,13 @@
 #pragma once
 #include <vector>
 #include <filesystem>
+#include <string>
 
 namespace fs = std::filesystem;
 typedef unsigned char byte;
 
 struct ImageBytes{
-    const char* filename;
+    std::string filename;
     int sz;
     byte* data;
 };

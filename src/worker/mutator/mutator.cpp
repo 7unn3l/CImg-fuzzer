@@ -12,6 +12,7 @@ ImageBytes* Mutator::get_mutated_sample(){
     
     mutated->sz = sample->sz;
     mutated->data = (byte*)malloc(sample->sz);
+    mutated->filename = sample->filename;
     
     memcpy(mutated->data,sample->data,sample->sz);
 

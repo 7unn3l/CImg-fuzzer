@@ -13,7 +13,7 @@ CorpusManager::CorpusManager(){
 }
 
 int CorpusManager::load_file(const fs::path &file){
-    auto fullpath = fs::absolute(file);
+    auto fullpath = fs::canonical(fs::absolute(file));
     size_t fsize = fs::file_size(file);
     
     if (fsize <= 0){
@@ -25,7 +25,7 @@ int CorpusManager::load_file(const fs::path &file){
 
     imgbytes->data = (byte*)malloc(fsize);
     imgbytes->sz = fsize;
-    //imgbytes->filename = fullpath.c_str(); fix this
+    imgbytes->filename = file.relative_path().string();
     
     corpus.push_back(imgbytes);
 
@@ -42,7 +42,8 @@ int CorpusManager::load_file(const fs::path &file){
 }
 
 void CorpusManager::load_corpus(){
-    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator(fs::path(fuzzer_corpus_dir)))
+    fs::current_path(fuzzer_corpus_dir);
+    for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator("."))
     {
         if (dir_entry.is_regular_file()){
             load_file(dir_entry);
