@@ -37,15 +37,19 @@ int CorpusManager::load_file(const fs::path &file){
 
     imgbytes->extension = imgbytes->filename.substr(dotindex+1);
     
-    corpus.push_back(imgbytes); // todo: fix adding invalid samples
 
     std::ifstream fd(fullpath.c_str(),std::ios::binary | std::ios::ate);
     fd.seekg(0, std::ios::beg);
 
     if(fd.read((char*)&imgbytes->data[0],fsize)){
+        
+        corpus.push_back(imgbytes);
         LOG("[+] loaded %s",fullpath.c_str());
+
     }else{
+
         LOG("[-] could not load %s",fullpath.c_str());
+        
     }
     fd.close();
     return 0;
