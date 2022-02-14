@@ -26,8 +26,18 @@ int CorpusManager::load_file(const fs::path &file){
     imgbytes->data = (byte*)malloc(fsize);
     imgbytes->sz = fsize;
     imgbytes->filename = file.relative_path().string();
+
+    int dotindex = imgbytes->filename.find_last_of(".");
+    int namesize = imgbytes->filename.size();
+
+    if (dotindex == std::string::npos || dotindex+1 >= namesize){
+        LOG("[-] could not load file %s : no extension",imgbytes->filename.c_str());
+        return 1;
+    }
+
+    imgbytes->extension = imgbytes->filename.substr(dotindex+1);
     
-    corpus.push_back(imgbytes);
+    corpus.push_back(imgbytes); // todo: fix adding invalid samples
 
     std::ifstream fd(fullpath.c_str(),std::ios::binary | std::ios::ate);
     fd.seekg(0, std::ios::beg);

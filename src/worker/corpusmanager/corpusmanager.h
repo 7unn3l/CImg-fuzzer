@@ -8,6 +8,7 @@ typedef unsigned char byte;
 
 struct ImageBytes{
     std::string filename;
+    std::string extension;
     int sz;
     byte* data;
 };
