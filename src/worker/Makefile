@@ -1,9 +1,20 @@
-bin/worker: bin/worker.o
-	g++ bin/worker.o -o bin/worker
+SOURCES := worker.cpp
+SOURCES += $(wildcard */*.cpp)
+_OBJECTS := $(patsubst %.cpp, %.o, $(SOURCES))
+OBJECTS =$(addprefix $(BIN)/, $(_OBJECTS))
 
-bin/worker.o: worker.cpp
-	mkdir -p bin
-	g++ -c worker.cpp -o bin/worker.o
+CPP = g++
+CPPFLAGS = -std=c++17
+
+BIN = bin
+
+
+$(BIN)/worker : $(OBJECTS)
+	$(CPP) $(CPPFLAGS) $^ -o $@
+
+$(BIN)/%.o: %.cpp
+	@mkdir -p  $(@D)
+	$(CPP) $(CPPFLAGS) -c $^ -o $@
 
 clean:
-	rm bin/*
+	rm -rf ./bin/*
