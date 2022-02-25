@@ -1,3 +1,4 @@
+#include "../conf/fuzzer_conf.h"
 #include <cstdlib>
 #include "string.h"
 #include "mutator.h"
@@ -17,7 +18,7 @@ ImageBytes* Mutator::get_mutated_sample(){
     
     memcpy(mutated->data,sample->data,sample->sz);
 
-    int num_changes = randomgen::xorshf96() % 9;
+    int num_changes =  1 + randomgen::xorshf96() % fuzzer_num_max_mutations;
 
     for (int i=0;i<num_changes;i++){
         int rindex = randomgen::xorshf96() % sample->sz;
