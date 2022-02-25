@@ -1,8 +1,24 @@
+#include "conf/fuzzer_conf.h"
 #include "random/random.h"
 #include "corpusmanager/corpusmanager.h"
 #include "mutator/mutator.h"
 #include "runner/runner.h"
 
+#ifdef fuzzer_local_perf_log
+
+#include <chrono>
+int samples_processed = 0;
+std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+#define perf_log() samples_processed+=1;if (samples_processed % 100 == 0){;log_performance();}
+
+void log_performance(){
+    double delta = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now()- begin).count();
+    printf("%f samples/s\n",samples_processed/delta);
+}
+
+#else
+#define perf_log()
+#endif
 
 void setup(){
     randomgen::seedrand();
@@ -21,6 +37,7 @@ int main(int argc, char* argv[]){
     setup();
 
     while (true){
+        perf_log();
         auto sample = mu.get_mutated_sample();
         rn.run_one_sample(sample);
         free(sample->data);
