@@ -31,7 +31,10 @@ void Runner::load_fileformat(ImageBytes* sample, cimg_library::CImg<unsigned cha
     }
     else if (EXTENSION("ppm") || EXTENSION("pgm")){
         LOAD(pnm);
-    }else{
+    }else if (EXTENSION("ascii")){
+        LOAD(ascii);
+    }
+    else{
         LOG("[-] no extension handler defined for extension %s",sample->fileformat.c_str());
         exit(1);
     }
