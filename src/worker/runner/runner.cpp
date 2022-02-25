@@ -1,5 +1,7 @@
 #include "runner.h"
 #include "../conf/CImg_conf.h"
+#include "../conf/fuzzer_conf.h"
+#include "../log/log.h"
 #include "../../CImg/CImg.h"
 
 void Runner::run_one_sample(ImageBytes* sample){
@@ -22,12 +24,16 @@ void Runner::load_fileformat(ImageBytes* sample, cimg_library::CImg<unsigned cha
     // no case statements with strings? Nice typesystem, c++
 
     #define EXTENSION(x) sample->fileformat.compare(x) == 0
+    #define LOAD(x) img._load_##x(vfile,"")
 
     if (EXTENSION("bmp")){
-        img._load_bmp(vfile,"");
+        LOAD(bmp);
     }
     else if (EXTENSION("ppm") || EXTENSION("pgm")){
-        img._load_pnm(vfile,"");
+        LOAD(pnm);
+    }else{
+        LOG("[-] no extension handler defined for extension %s",sample->fileformat.c_str());
+        exit(1);
     }
     fclose(vfile);
 }
