@@ -30,7 +30,7 @@ void Communicator::setup(int uid,const CorpusManager& cm){
     }
    
     // set the size of the shared memory object
-    int ret = ftruncate(fd,10);
+    int ret = ftruncate(fd,needed_size);
     if (ret){
         LOG("could not resize shared memory object, error %d",errno);
         exit(1);
@@ -38,7 +38,7 @@ void Communicator::setup(int uid,const CorpusManager& cm){
     
     // map the shared memory segment into our address space and set RW and shared map properties.
     // Begin at offset 0.
-    uint8_t *shm_ptr = (uint8_t*)mmap(NULL, 10, PROT_READ | PROT_WRITE,MAP_SHARED, fd, 0);
+    uint8_t *shm_ptr = (uint8_t*)mmap(NULL, needed_size, PROT_READ | PROT_WRITE,MAP_SHARED, fd, 0);
     
     if (shm_ptr == nullptr){
         LOG("received a nullpointer from mmap");
