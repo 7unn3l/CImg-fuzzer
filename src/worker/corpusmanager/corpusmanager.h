@@ -17,6 +17,8 @@ class CorpusManager{
     public:
         ImageBytes* get_random_sample();
         CorpusManager();
+        int  get_largest_samplesize() const;
+        int get_largest_filenamesize() const;
     
     private:
         std::vector<ImageBytes*> corpus;

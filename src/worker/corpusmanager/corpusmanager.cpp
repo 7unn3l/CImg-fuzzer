@@ -70,3 +70,25 @@ ImageBytes* CorpusManager::get_random_sample(){
     uint_fast32_t ind = randomgen::xorshf96() % corpus.size();
     return corpus.at(ind);
 }
+
+int CorpusManager::get_largest_samplesize() const{
+    int largest = 0;
+    for (int i=0;i<corpus.size();i++){
+        int sz = corpus.at(i)->sz;
+        if (sz > largest){
+            largest = sz;
+        }
+    }
+    return largest;
+}
+
+int CorpusManager::get_largest_filenamesize() const{
+    int largest = 0;
+    for (int i=0;i<corpus.size();i++){
+        int sz = corpus.at(i)->filename.size();
+        if (sz > largest){
+            largest = sz;
+        }
+    }
+    return largest;
+}
