@@ -10,7 +10,7 @@ BIN = bin
 
 
 $(BIN)/worker : $(OBJECTS)
-	$(CPP) $(CPPFLAGS) $^ -o $@
+	$(CPP) $(CPPFLAGS) $^ -o $@ -lrt
 
 $(BIN)/%.o: %.cpp
 	@mkdir -p  $(@D)
