@@ -10,7 +10,7 @@ void Mutator::set_mutated_sample(Communicator& com){
     
     com.update(sample);
 
-    int num_changes =  1 + randomgen::xorshf96() % fuzzer_num_max_mutations;
+    int num_changes =  1 + randomgen::xorshf96() % fuzzer_num_max_mutations % sample->sz;
 
     for (int i=0;i<num_changes;i++){
         int rindex = randomgen::xorshf96() % sample->sz;
