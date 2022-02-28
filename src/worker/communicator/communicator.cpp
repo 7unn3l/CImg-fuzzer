@@ -23,7 +23,7 @@ void Communicator::setup(int uid,const CorpusManager& cm){
     LOG("allocating shared memory object '%s' of size %d",shm_obj_name.c_str(),needed_size);
 
     // create a new shared memory object with RW access and RW permissions of this process
-    int fd = shm_open("cimg_fuzzer_shmobj", O_RDWR | O_CREAT , S_IRUSR | S_IWUSR);
+    int fd = shm_open(shm_obj_name.c_str(), O_RDWR | O_CREAT , S_IRUSR | S_IWUSR);
     
     if (fd <= 0){
         LOG("could not create shared memory, error %d",errno);
