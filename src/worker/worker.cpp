@@ -3,6 +3,7 @@
 #include "corpusmanager/corpusmanager.h"
 #include "mutator/mutator.h"
 #include "runner/runner.h"
+#include "communicator/communicator.h"
 
 #ifdef fuzzer_local_perf_log
 
@@ -33,15 +34,14 @@ int main(int argc, char* argv[]){
     CorpusManager cm{};
     Mutator mu{&cm};
     Runner rn{};
+    Communicator com{};
+    com.setup(69,cm); // static id for now
 
     setup();
 
     while (true){
         perf_log();
-        auto sample = mu.get_mutated_sample();
-        rn.run_one_sample(sample);
-        free(sample->data);
-        delete sample;
+        mu.set_mutated_sample(com);
+        rn.run_one_sample(com);
     }
-
 }

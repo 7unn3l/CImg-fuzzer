@@ -1,30 +1,23 @@
 #include "../conf/fuzzer_conf.h"
-#include <cstdlib>
-#include "string.h"
 #include "mutator.h"
 #include "../corpusmanager/corpusmanager.h"
 #include "../random/random.h"
 
 Mutator::Mutator(CorpusManager* cm) : corpus_manager{cm} {}
 
-ImageBytes* Mutator::get_mutated_sample(){
+void Mutator::set_mutated_sample(Communicator& com){
     ImageBytes* sample = corpus_manager->get_random_sample();
-    ImageBytes* mutated = new ImageBytes;
     
-    mutated->sz = sample->sz;
-    mutated->data = (byte*)malloc(sample->sz);
-    mutated->filename = sample->filename;
-    mutated->fileformat = sample->fileformat;
-    
-    memcpy(mutated->data,sample->data,sample->sz);
+    com.update(sample);
 
     int num_changes =  1 + randomgen::xorshf96() % fuzzer_num_max_mutations;
 
     for (int i=0;i<num_changes;i++){
         int rindex = randomgen::xorshf96() % sample->sz;
-        mutated->data[rindex] = randomgen::xorshf96() % 256;
+
+        // ignore 2 byte header
+        com.shm_buf[2+rindex] = randomgen::xorshf96() % 256;
 
     }
-    return mutated;
 
 }
