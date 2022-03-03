@@ -25,17 +25,25 @@ void setup(){
     randomgen::seedrand();
 
     // avoid printing exception messages to stdout, still allowes
-    // the library to throw them.
+    // the library to throw them.    
     cimg_library::cimg::exception_mode(0);
 
 }
 
 int main(int argc, char* argv[]){
+
+    if (argc < 2){
+        printf("a worker thread needs to be started with an id. use worker <id>\n");
+        exit(1);
+    }
+    std::string id = argv[1];
+    
+
     CorpusManager cm{};
     Mutator mu{&cm};
     Runner rn{};
     Communicator com{};
-    com.setup(69,cm); // static id for now
+    com.setup(id,cm);
 
     setup();
 

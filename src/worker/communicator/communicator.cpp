@@ -7,10 +7,10 @@
 #include <errno.h>
 #include <cstring>
 
-void Communicator::setup(int uid,const CorpusManager& cm){
+void Communicator::setup(std::string& id,const CorpusManager& cm){
 
     std::string shm_obj_name = "cimg_fuzz_worker_";
-    shm_obj_name += std::to_string(uid);
+    shm_obj_name += id;
 
     /* calculate the size for the communication buffer which always is
        [2 byte unsigned] sample_counter (controller will correctly handle overflows)
