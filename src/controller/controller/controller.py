@@ -18,10 +18,12 @@ class Statistics:
     seconds_per_crash = 0
 
 class Controller():
-    def __init__(self,num_workers,crash_dir,update_interval):
+    def __init__(self,num_workers,crash_dir,update_interval,corpus_dir,binary_path):
         self.num_workers = num_workers
         self.crash_dir = os.path.abspath(crash_dir)
         self.update_interval = update_interval
+        self.corpus_dir = corpus_dir
+        self.binary_path = binary_path
         self.crashes = []
         self.workers = []
         self._end = False
@@ -80,7 +82,7 @@ class Controller():
         print(f'starting fuzzing session with {self.num_workers} workers..')
 
         for i in range(self.num_workers):
-            w = WorkerProcess(str(i),'./bin/worker')
+            w = WorkerProcess(str(i),self.corpus_dir,self.binary_path)
             self.workers.append(w)
             w.start()
         

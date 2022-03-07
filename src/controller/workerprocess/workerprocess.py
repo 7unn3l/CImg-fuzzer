@@ -5,8 +5,9 @@ import struct
 import time
 
 class WorkerProcess():
-    def __init__(self,id,binarypath='./worker'):
+    def __init__(self,id,corpus_dir,binarypath):
         self.id = id
+        self.corpus_dir = corpus_dir
         self.binarypath = binarypath
         self.shm_id = f'cimg_fuzz_worker_{self.id}'
         self.shm = None
@@ -16,7 +17,7 @@ class WorkerProcess():
         self.total_samplecount = 0
     
     def start(self):
-        self.proc = subprocess.Popen([self.binarypath,self.id],stdout=subprocess.PIPE)
+        self.proc = subprocess.Popen([self.binarypath,self.id,self.corpus_dir],stdout=subprocess.PIPE)
 
         while self.proc.poll() == None:
             time.sleep(.125)

@@ -16,12 +16,12 @@ struct ImageBytes{
 class CorpusManager{
     public:
         ImageBytes* get_random_sample();
-        CorpusManager();
+        CorpusManager(const std::string &corpus_dir);
         int  get_largest_samplesize() const;
         int get_largest_filenamesize() const;
     
     private:
         std::vector<ImageBytes*> corpus;
-        void load_corpus();
+        void load_corpus(const std::string &corpus_dir);
         int load_file(const fs::path&);
 };

@@ -32,14 +32,15 @@ void setup(){
 
 int main(int argc, char* argv[]){
 
-    if (argc < 2){
-        printf("a worker thread needs to be started with an id. use worker <id>\n");
+    if (argc < 3){
+        printf("please supply id and corpus. use worker <id> <corpus dir>\n");
         exit(1);
     }
     std::string id = argv[1];
+    std::string corpus_dir = argv[2];
     
 
-    CorpusManager cm{};
+    CorpusManager cm{corpus_dir};
     Mutator mu{&cm};
     Runner rn{};
     Communicator com{};

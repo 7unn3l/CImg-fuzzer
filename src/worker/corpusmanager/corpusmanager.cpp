@@ -7,9 +7,9 @@
 
 namespace fs = std::filesystem;
 
-CorpusManager::CorpusManager(){
+CorpusManager::CorpusManager(const std::string &corpus_dir){
+    load_corpus(corpus_dir);
     LOG("corpus manager initialized");
-    load_corpus();
 }
 
 int CorpusManager::load_file(const fs::path &file){
@@ -55,8 +55,8 @@ int CorpusManager::load_file(const fs::path &file){
     return 0;
 }
 
-void CorpusManager::load_corpus(){
-    fs::current_path(fuzzer_corpus_dir);
+void CorpusManager::load_corpus(const std::string &corpus_dir){
+    fs::current_path(corpus_dir);
     for (const fs::directory_entry& dir_entry : fs::recursive_directory_iterator("."))
     {
         if (dir_entry.is_regular_file()){
