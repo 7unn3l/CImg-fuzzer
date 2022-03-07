@@ -18,10 +18,10 @@ class Statistics:
     seconds_per_crash = 0
 
 class Controller():
-    def __init__(self,num_workers,crash_dir='./crashes',statistics_update_interval=1/8):
+    def __init__(self,num_workers,crash_dir='./crashes',update_interval=1/8):
         self.num_workers = num_workers
         self.crash_dir = os.path.abspath(crash_dir)
-        self.update_interval = statistics_update_interval
+        self.update_interval = update_interval
         self.crashes = []
         self.workers = []
         self._end = False
