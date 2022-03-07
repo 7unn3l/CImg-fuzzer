@@ -1,4 +1,3 @@
-from hashlib import new
 from multiprocessing import shared_memory
 from os import path
 import subprocess
