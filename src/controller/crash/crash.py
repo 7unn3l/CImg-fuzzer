@@ -1,9 +1,9 @@
 import os
-from datetime import date
+import time
 
 class Crash():
     def __init__(self,exitcode,filename,content):
-        self.creationdate = date.today().strftime("%d.%m.%Y_%H:%M:%S")
+        self.creationdate = time.perf_counter()
         self.exitcode = exitcode
         self.filename = filename
         self.content = content

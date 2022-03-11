@@ -1,5 +1,6 @@
 import os
 import time
+from ui.ui import Ui
 from workerprocess.workerprocess import WorkerProcess
 from crash.crash import Crash
 from threading import Thread
@@ -27,6 +28,7 @@ class Controller():
         self.crashes = []
         self.workers = []
         self._end = False
+        self.ui = Ui()
     
     def make_crash_dir(self):
         if not os.path.exists(self.crash_dir):
@@ -51,6 +53,7 @@ class Controller():
         Statistics.samples_per_second_per_worker = Statistics.samples_per_second/self.num_workers
 
         Statistics.total_crashes = len(self.crashes)
+        Statistics.crashes_by_filetype = {}
         if Statistics.total_crashes > 0:
             Statistics.seconds_per_crash = delta/Statistics.total_crashes
             for crash in self.crashes:
@@ -75,7 +78,7 @@ class Controller():
                 Statistics._last_samples_processed_per_worker[self.workers.index(worker)] = 0
                 worker.restart()
 
-    def run(self):
+    def run(self,_):
 
         self.make_crash_dir()
         self.init_statistics()
@@ -87,12 +90,14 @@ class Controller():
             w.start()
         
         Thread(target=self.t_watch_workers).start()
+        
+        self.ui.stdscr.clear()
 
         while not self._end:
             try:
                 time.sleep(self.update_interval)
-                self.update_statistics()
-                print(Statistics.samples_per_second,'samples /s',f'({Statistics.samples_per_second_per_worker} per worker per second) {Statistics.seconds_per_crash} seconds/crash\t[{Statistics.total_crashes} crashes total] [{self.workers[0].total_samplecount} samples total]',end='\r')
+                self.update_statistics()                
+                self.ui.render(Statistics,self)
             except KeyboardInterrupt:
                 self.end()
     
