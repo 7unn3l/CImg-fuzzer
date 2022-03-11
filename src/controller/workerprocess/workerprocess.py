@@ -46,7 +46,7 @@ class WorkerProcess():
 
         if diff < 0:
             # handle overflow
-            diff = pow(2,16)-1 - diff
+            diff = pow(2,16)-1 + diff
 
         self.total_samplecount += diff
 
