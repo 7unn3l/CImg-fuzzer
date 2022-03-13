@@ -5,12 +5,13 @@ OBJECTS =$(addprefix $(BIN)/, $(_OBJECTS))
 
 CPP = g++
 CPPFLAGS = -std=c++17
+LIBS = -lpng -ljpeg -lrt
 
 BIN = bin
 
 
 $(BIN)/worker : $(OBJECTS)
-	$(CPP) $(CPPFLAGS) $^ -o $@ -lrt
+	$(CPP) $(CPPFLAGS) $^ -o $@ $(LIBS)
 
 $(BIN)/%.o: %.cpp
 	@mkdir -p  $(@D)
