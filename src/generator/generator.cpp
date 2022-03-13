@@ -35,7 +35,8 @@ int main(int argc,char* argv[]){
 
     // native formats
 
-    SAVE(raw);
+    //SAVE(raw); taken out since Cimg wont ever call load_raw when 
+    // loading usr supplied image of any type
     SAVE(ascii);
     SAVE(analyze); // alias hdr,nii
     SAVE(inr);
