@@ -41,7 +41,7 @@ int main(int argc,char* argv[]){
     SAVE(inr);
     SAVE(pnm); // alias pgm,ppm
     SAVE(bmp);
-    SAVE(pandore);
+    SAVE(pandore); // alias pan
     SAVE(dlm);
 
     // external formats
