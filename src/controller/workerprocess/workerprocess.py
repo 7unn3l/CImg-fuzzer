@@ -27,7 +27,7 @@ class WorkerProcess():
             except FileNotFoundError:
                 pass
 
-        raise BaseException('worker binary exited during setup')
+        raise BaseException(f'worker binary exited during setup with exit code {self.proc.poll()}')
 
     def _samples_processed(self):
         self._last_samplecount = struct.unpack('>H',self.shm.buf[:2])[0]
