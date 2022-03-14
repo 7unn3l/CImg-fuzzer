@@ -69,6 +69,8 @@ class WorkerProcess():
         return content,path.basename(filename.decode())
     
     def kill(self):
+        if self.shm == None:
+            return
         try:
             self.shm.unlink()
         except FileNotFoundError:

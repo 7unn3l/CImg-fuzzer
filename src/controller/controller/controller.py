@@ -100,7 +100,6 @@ class Controller():
             # check for exceptions in the worker watcher thread
             # and re-raise them here so curses.wrapper can properly catch them
             if self.exc_info != None:
-                self.end()
                 raise self.exc_info[1].with_traceback(self.exc_info[2])
 
             try:
@@ -108,7 +107,7 @@ class Controller():
                 self.update_statistics()                
                 self.ui.render(Statistics,self)
             except KeyboardInterrupt:
-                self.end()
+                break
     
     def get_dead_workers(self):
         return [worker for worker in self.workers if worker.get_retcode() != None]
