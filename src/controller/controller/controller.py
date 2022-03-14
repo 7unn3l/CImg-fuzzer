@@ -46,11 +46,7 @@ class Controller():
         delta = time.perf_counter()-Statistics.starttime
         Statistics.runtime = delta
 
-        # calculate total samples procssed
-        Statistics.total_samples_processed = 0
-        for worker in self.workers:
-            Statistics.total_samples_processed += worker.get_total_samples_porocessed()
-
+        Statistics.total_samples_processed = sum([worker.get_total_samples_porocessed() for worker in self.workers])
         Statistics.samples_per_second = Statistics.total_samples_processed/delta
         Statistics.samples_per_second_per_worker = Statistics.samples_per_second/self.num_workers
 
