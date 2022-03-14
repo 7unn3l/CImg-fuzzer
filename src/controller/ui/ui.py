@@ -38,7 +38,7 @@ class Ui:
         self.add_pair('runtime',prettydelta(stats.runtime))
 
         if controller.crashes:
-            val = prettydelta(time.perf_counter() - controller.crashes[-1].creationdate)
+            val = prettydelta(time.perf_counter() - controller.crashes[-1].creationdate,z=False)
         else:
             val = 'n/a'
         
