@@ -19,15 +19,22 @@ class WorkerProcess():
     def start(self):
         self.proc = subprocess.Popen([self.binarypath,self.id,self.corpus_dir],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 
-        while self.proc.poll() == None:
-            time.sleep(.125)
+        # we give the worker process 10 seconds to (re)start and setup
+        # if time runs out or process exits during setup, raise an exception.
+
+        for _ in range(int(10/.125)):
+            if self.proc.poll() != None:
+                raise BaseException(f'worker binary with id {self.id} exited prematurely during setup with code {self.proc.poll()}')
+
             try:
                 self.shm = shared_memory.SharedMemory(name=self.shm_id)
                 return
             except FileNotFoundError:
+                # setup not yet done
                 pass
+            time.sleep(.125)
 
-        raise BaseException(f'worker binary exited during setup with exit code {self.proc.poll()}')
+        raise BaseException(f'worker binary with id {self.id} did not create shared memory after 10 seconds. Timeout.')
 
     def _samples_processed(self):
         self._last_samplecount = struct.unpack('>H',self.shm.buf[:2])[0]
