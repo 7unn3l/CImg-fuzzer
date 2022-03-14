@@ -17,7 +17,7 @@ class WorkerProcess():
         self.total_samplecount = 0
     
     def start(self):
-        self.proc = subprocess.Popen([self.binarypath,self.id,self.corpus_dir],stdout=subprocess.PIPE)
+        self.proc = subprocess.Popen([self.binarypath,self.id,self.corpus_dir],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 
         while self.proc.poll() == None:
             time.sleep(.125)
