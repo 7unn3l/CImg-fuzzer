@@ -1,5 +1,6 @@
 import os
 import time
+import sys
 from ui.ui import Ui
 from workerprocess.workerprocess import WorkerProcess
 from crash.crash import Crash
@@ -27,6 +28,7 @@ class Controller():
         self.binary_path = binary_path
         self.crashes = []
         self.workers = []
+        self.exc_info = None
         self._end = False
         self.ui = Ui()
     
@@ -69,14 +71,18 @@ class Controller():
 
     def t_watch_workers(self):
         while not self._end:
-            for worker in self.get_dead_workers():
-                r = worker.get_retcode()
-                content,fname = worker.get_sampleinfo()
-                c = Crash(r,fname,content)
-                self.crashes.append(c)
-                c.safe_to_disk(self.crash_dir)                
-                Statistics._last_samples_processed_per_worker[self.workers.index(worker)] = 0
-                worker.restart()
+            try:
+                for worker in self.get_dead_workers():
+                    r = worker.get_retcode()
+                    content,fname = worker.get_sampleinfo()
+                    c = Crash(r,fname,content)
+                    self.crashes.append(c)
+                    c.safe_to_disk(self.crash_dir)
+                    Statistics._last_samples_processed_per_worker[self.workers.index(worker)] = 0
+                    worker.restart()
+            except:
+                self.exc_info = sys.exc_info()
+                time.sleep(self.update_interval*2) # required bc of infinite lock
 
     def run(self,_):
 
@@ -94,6 +100,13 @@ class Controller():
         self.ui.stdscr.clear()
 
         while not self._end:
+
+            # check for exceptions in the worker watcher thread
+            # and re-raise them here so curses.wrapper can properly catch them
+            if self.exc_info != None:
+                self.end()
+                raise self.exc_info[1].with_traceback(self.exc_info[2])
+
             try:
                 time.sleep(self.update_interval)
                 self.update_statistics()                
