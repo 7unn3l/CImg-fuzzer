@@ -68,7 +68,7 @@ class WorkerProcess():
         content = data.rstrip(b'\x00')[:-len(filename)-1]
         return content,path.basename(filename.decode())
     
-    def kill(self):
+    def save_unlink(self):
         if self.shm == None:
             return
         try:
@@ -78,12 +78,14 @@ class WorkerProcess():
             # already destroyed
             pass
 
+    def kill(self):
+        self.save_unlink()
         self.proc.kill()
     
     def restart(self):
         assert self.proc.poll() != None, "tried to restart running worker process"
         self.restarting = True
         self._last_samplecount = 0
-        self.shm.unlink()
+        self.save_unlink()
         self.start()
         self.restarting = False
