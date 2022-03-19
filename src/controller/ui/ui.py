@@ -57,7 +57,7 @@ class Ui:
         else:
             col = 2
 
-        self.add_pair('total crashes',stats.total_crashes,col)
+        self.add_pair('total crashes',f'{stats.total_crashes} {f"({stats.total_hangs} hangs)" if stats.total_hangs else ""}',col)
         self.add_pair('avg time to crash',prettydelta(stats.seconds_per_crash))
 
 

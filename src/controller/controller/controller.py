@@ -15,17 +15,23 @@ class Statistics:
     samples_per_second_per_worker = 0
     samples_per_second = 0
     
-    total_crashes = 0
+    # total_crashes counts both hangs and actual crashes.
+    # we do not differentiate between crashes and hangs
+    # for other time based statistic variables
+
+    total_crashes = 0 
+    total_hangs = 0
     crashes_by_filetype = {}
     seconds_per_crash = 0
 
 class Controller():
-    def __init__(self,num_workers,crash_dir,update_interval,corpus_dir,binary_path):
+    def __init__(self,num_workers,crash_dir,update_interval,corpus_dir,binary_path,max_hangtime):
         self.num_workers = num_workers
         self.crash_dir = os.path.abspath(crash_dir)
         self.update_interval = update_interval
         self.corpus_dir = corpus_dir
         self.binary_path = binary_path
+        self.max_hangtime = max_hangtime
         self.crashes = []
         self.workers = []
         self.exc_info = None
@@ -51,6 +57,7 @@ class Controller():
         Statistics.samples_per_second_per_worker = Statistics.samples_per_second/self.num_workers
 
         Statistics.total_crashes = len(self.crashes)
+        Statistics.total_hangs = len([c for c in self.crashes if c.exitcode == None])
         Statistics.crashes_by_filetype = {}
         if Statistics.total_crashes > 0:
             Statistics.seconds_per_crash = delta/Statistics.total_crashes
@@ -68,14 +75,21 @@ class Controller():
     def t_watch_workers(self):
         while not self._end:
             try:
-                for worker in self.get_dead_workers():
-                    r = worker.get_retcode()
+                for worker,reason in self.get_dead_workers():
+
+                    r = worker.get_retcode() if reason == 'crash' else None
+
                     content,fname = worker.get_sampleinfo()
                     c = Crash(r,fname,content)
                     self.crashes.append(c)
                     c.safe_to_disk(self.crash_dir)
                     Statistics._last_samples_processed_per_worker[self.workers.index(worker)] = 0
+
+                    if reason == 'hang':
+                        worker.kill()
+
                     worker.restart()
+
             except:
                 self.exc_info = sys.exc_info()
                 time.sleep(self.update_interval*2) # required bc of infinite lock
@@ -87,7 +101,7 @@ class Controller():
         print(f'starting fuzzing session with {self.num_workers} workers..')
 
         for i in range(self.num_workers):
-            w = WorkerProcess(str(i),self.corpus_dir,self.binary_path)
+            w = WorkerProcess(str(i),self.corpus_dir,self.binary_path,self.max_hangtime)
             self.workers.append(w)
             w.start()
         
@@ -110,4 +124,12 @@ class Controller():
                 break
     
     def get_dead_workers(self):
-        return [worker for worker in self.workers if worker.get_retcode() != None]
+        for worker in self.workers:
+            reason = ''
+            if worker.get_retcode() != None:
+                reason = 'crash'
+            elif worker.is_hanging():
+                reason = 'hang'
+
+            if reason:
+                yield (worker,reason)

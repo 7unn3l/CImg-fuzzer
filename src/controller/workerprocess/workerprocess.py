@@ -5,16 +5,18 @@ import struct
 import time
 
 class WorkerProcess():
-    def __init__(self,id,corpus_dir,binarypath):
+    def __init__(self,id,corpus_dir,binarypath,max_hangtime):
         self.id = id
         self.corpus_dir = corpus_dir
         self.binarypath = binarypath
+        self.max_hangtime = max_hangtime
         self.shm_id = f'cimg_fuzz_worker_{self.id}'
         self.shm = None
         self.proc = None
         self.restarting = False
         self._last_samplecount = 0
         self.total_samplecount = 0
+        self.hang_ts = 0
     
     def start(self):
         self.proc = subprocess.Popen([self.binarypath,self.id,self.corpus_dir],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
@@ -24,7 +26,7 @@ class WorkerProcess():
 
         for _ in range(int(10/.125)):
             if self.proc.poll() != None:
-                raise BaseException(f'worker binary with id {self.id} exited prematurely during setup with code {self.proc.poll()}')
+                raise BaseException(f'worker binary with id {self.id} exited prematurely during setup with code {self.proc.poll()} stderr={self.proc.stderr.read()}')
 
             try:
                 self.shm = shared_memory.SharedMemory(name=self.shm_id)
@@ -40,6 +42,11 @@ class WorkerProcess():
         self._last_samplecount = struct.unpack('>H',self.shm.buf[:2])[0]
         return self._last_samplecount
     
+    def is_hanging(self):
+        if self.hang_ts != 0:
+            return time.perf_counter()-self.hang_ts >= self.max_hangtime
+        return False
+
     def get_total_samples_porocessed(self):
         # thread safety
         if self.restarting:
@@ -55,7 +62,12 @@ class WorkerProcess():
             # handle overflow
             diff = pow(2,16)-1 + diff
 
-        self.total_samplecount += diff
+        if diff == 0:
+            if self.hang_ts == 0:
+                self.hang_ts = time.perf_counter()
+        else:
+            self.hang_ts = 0
+            self.total_samplecount += diff
 
         return self.total_samplecount 
 
@@ -81,11 +93,16 @@ class WorkerProcess():
     def kill(self):
         self.save_unlink()
         self.proc.kill()
-    
+
+        #avoid race condition where we try to restart a running process
+        while self.get_retcode() == None:
+            pass
+
     def restart(self):
         assert self.proc.poll() != None, "tried to restart running worker process"
         self.restarting = True
         self._last_samplecount = 0
+        self.hang_ts = 0
         self.save_unlink()
         self.start()
         self.restarting = False

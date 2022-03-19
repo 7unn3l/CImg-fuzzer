@@ -13,7 +13,8 @@ class Crash():
         i = 0
         while True:
             optional = '' if i == 0 else f'_{i}'
-            filename = f'crash_{self.creationdate}{optional}_{self.exitcode}_{self.filename}'
+            exit_info = self.exitcode if self.exitcode != None else 'hang'
+            filename = f'crash_{self.creationdate}{optional}_{exit_info}_{self.filename}'
             abspath = os.path.abspath(os.path.join(directory,filename))
 
             if os.path.exists(abspath):
