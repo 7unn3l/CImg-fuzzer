@@ -10,7 +10,6 @@ class Statistics:
     starttime = None
     runtime = 0
 
-    _last_samples_processed_per_worker = []
     total_samples_processed = 0
     samples_per_second_per_worker = 0
     samples_per_second = 0
@@ -45,7 +44,6 @@ class Controller():
             pass
     
     def init_statistics(self):
-        Statistics._last_samples_processed_per_worker = [0]*self.num_workers
         Statistics.starttime = time.perf_counter()
 
     def update_statistics(self):
@@ -83,7 +81,6 @@ class Controller():
                     c = Crash(r,fname,content)
                     self.crashes.append(c)
                     c.safe_to_disk(self.crash_dir)
-                    Statistics._last_samples_processed_per_worker[self.workers.index(worker)] = 0
 
                     if reason == 'hang':
                         worker.kill()

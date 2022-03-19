@@ -45,7 +45,7 @@ class Ui:
         self.add_pair('last crash',val)
         
         self.add_section('workers')
-        self.add_pair('workers',len(stats._last_samples_processed_per_worker))
+        self.add_pair('workers',controller.num_workers)
         self.add_pair('samples per second',int(stats.samples_per_second))
         self.add_pair('samples per second per worker',int(stats.samples_per_second_per_worker))
         self.add_pair('total samples',int(stats.total_samples_processed))
