@@ -24,13 +24,14 @@ class Statistics:
     seconds_per_crash = 0
 
 class Controller():
-    def __init__(self,num_workers,crash_dir,update_interval,corpus_dir,binary_path,max_hangtime):
-        self.num_workers = num_workers
-        self.crash_dir = os.path.abspath(crash_dir)
-        self.update_interval = update_interval
-        self.corpus_dir = corpus_dir
-        self.binary_path = binary_path
-        self.max_hangtime = max_hangtime
+    def __init__(self,args):
+        self.args = args
+        self.num_workers = args.num_fuzzers
+        self.crash_dir = os.path.abspath(args.crash_dir)
+        self.update_interval = args.update_interval
+        self.corpus_dir = args.corpus_dir
+        self.binary_path = args.binary_path
+        self.max_hangtime = args.max_hangtime
         self.crashes = []
         self.workers = []
         self.exc_info = None
@@ -92,13 +93,12 @@ class Controller():
                 time.sleep(self.update_interval*2) # required bc of infinite lock
 
     def run(self,_):
-
         self.make_crash_dir()
         self.init_statistics()
         print(f'starting fuzzing session with {self.num_workers} workers..')
 
         for i in range(self.num_workers):
-            w = WorkerProcess(str(i),self.corpus_dir,self.binary_path,self.max_hangtime)
+            w = WorkerProcess(str(i),self.args)
             self.workers.append(w)
             w.start()
         

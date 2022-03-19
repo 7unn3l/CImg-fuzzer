@@ -5,11 +5,11 @@ import struct
 import time
 
 class WorkerProcess():
-    def __init__(self,id,corpus_dir,binarypath,max_hangtime):
+    def __init__(self,id,args):
         self.id = id
-        self.corpus_dir = corpus_dir
-        self.binarypath = binarypath
-        self.max_hangtime = max_hangtime
+        self.corpus_dir = args.corpus_dir
+        self.binarypath = args.binary_path
+        self.max_hangtime = args.max_hangtime
         self.shm_id = f'cimg_fuzz_worker_{self.id}'
         self.shm = None
         self.proc = None
