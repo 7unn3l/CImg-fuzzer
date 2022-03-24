@@ -1,5 +1,5 @@
 import curses
-import time
+import datetime
 from displayutils.displayutils import prettydelta
 
 class Ui:
@@ -38,7 +38,7 @@ class Ui:
         self.add_pair('runtime',prettydelta(stats.runtime))
 
         if controller.crashes:
-            val = prettydelta(time.perf_counter() - controller.crashes[-1].creationdate,z=False)
+            val = prettydelta((datetime.datetime.now() - controller.crashes[-1].creationdate).total_seconds(),z=False)
         else:
             val = 'n/a'
         

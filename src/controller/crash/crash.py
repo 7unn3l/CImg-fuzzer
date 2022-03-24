@@ -1,9 +1,9 @@
 import os
-import time
+import datetime
 
 class Crash():
     def __init__(self,exitcode,filename,content):
-        self.creationdate = time.perf_counter()
+        self.creationdate = datetime.datetime.now()
         self.exitcode = exitcode
         self.filename = filename
         self.content = content
@@ -14,7 +14,8 @@ class Crash():
         while True:
             optional = '' if i == 0 else f'_{i}'
             exit_info = self.exitcode if self.exitcode != None else 'hang'
-            filename = f'crash_{self.creationdate}{optional}_{exit_info}_{self.filename}'
+            date = self.creationdate.strftime("%d.%m.%y_%H:%M")
+            filename = f'crash_{date}{optional}_{exit_info}_{self.filename}'
             abspath = os.path.abspath(os.path.join(directory,filename))
 
             if os.path.exists(abspath):
