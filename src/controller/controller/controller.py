@@ -43,9 +43,7 @@ class Controller():
             os.makedirs(self.crash_dir)
         else:
             pass
-    
-    def init_statistics(self):
-        Statistics.starttime = time.perf_counter()
+
 
     def update_statistics(self):
         delta = time.perf_counter()-Statistics.starttime
@@ -92,9 +90,13 @@ class Controller():
                 self.exc_info = sys.exc_info()
                 time.sleep(self.update_interval*2) # required bc of infinite lock
 
-    def run(self,_):
+    def preflight(self):
+
+        if not os.path.exists(self.corpus_dir):
+            raise FileNotFoundError(f'corpus directory {os.path.abspath(self.corpus_dir)} does not exist')
+
         self.make_crash_dir()
-        self.init_statistics()
+        
         print(f'starting fuzzing session with {self.num_workers} workers..')
 
         for i in range(self.num_workers):
@@ -102,9 +104,15 @@ class Controller():
             self.workers.append(w)
             w.start()
         
+        Statistics.starttime = time.perf_counter()
+
         Thread(target=self.t_watch_workers).start()
         
         self.ui.stdscr.clear()
+
+
+    def run(self,_):
+        self.preflight()
 
         while not self._end:
 
