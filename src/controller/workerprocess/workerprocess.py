@@ -30,6 +30,10 @@ class WorkerProcess():
 
             try:
                 self.shm = shared_memory.SharedMemory(name=self.shm_id)
+                # to avoid a race condition where the worker starts fuzzing
+                # the target before we detect that the shm has been established,
+                # the worker waits for the shm to be written to.
+                self.shm.buf[0] = 1
                 return
             except FileNotFoundError:
                 # setup not yet done

@@ -48,6 +48,8 @@ int main(int argc, char* argv[]){
 
     setup();
 
+    com.wait_for_controller();
+
     while (true){
         perf_log();
         mu.set_mutated_sample(com);

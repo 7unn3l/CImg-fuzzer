@@ -9,4 +9,5 @@ class Communicator{
         std::string current_extension; // safes complicated extraction
         void setup(std::string& id,const CorpusManager &cm);
         void update(ImageBytes* sample);
+        void wait_for_controller();
 };

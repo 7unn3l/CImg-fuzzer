@@ -50,6 +50,18 @@ void Communicator::setup(std::string& id,const CorpusManager& cm){
     shm_buf_sz = needed_size;
 }
 
+void Communicator::wait_for_controller(){
+    // assuming that the shm buf is a new one and filled
+    // with zeros, wait for the controller to exit the setup
+    // phase, signaled to a write to index 0 in the shm buf
+
+    while (1){
+        if (shm_buf[0] != 0){
+            break;
+        }
+    }
+}
+
 void Communicator::update(ImageBytes* sample){
 
     // update counter 16 bit unsigned big endian
