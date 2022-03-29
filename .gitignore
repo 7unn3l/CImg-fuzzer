@@ -2,3 +2,5 @@ __pycache__/
 bin/
 .vscode/
 sample_corpus/
+crash_*
+*.sh
