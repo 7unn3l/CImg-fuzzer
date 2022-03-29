@@ -86,4 +86,5 @@ void Communicator::update(ImageBytes* sample){
 
     // safe extension
     current_extension = sample->fileformat;
+    current_samplesize = sample->sz;
 }

@@ -19,7 +19,7 @@ void Runner::run_one_sample(Communicator& com){
 
 void Runner::load_fileformat(Communicator& com, cimg_library::CImg<unsigned char>& img){
 
-    FILE* vfile = fmemopen(com.shm_buf+2,com.shm_buf_sz,"rw");
+    FILE* vfile = fmemopen(com.shm_buf+2,com.current_samplesize,"rw");
 
     // no case statements with strings? Nice typesystem, c++
 
