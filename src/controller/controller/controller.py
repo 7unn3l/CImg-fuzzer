@@ -32,6 +32,8 @@ class Controller():
         self.corpus_dir = args.corpus_dir
         self.binary_path = args.binary_path
         self.max_hangtime = args.max_hangtime
+        self.restart_interval = args.restart_interval
+        self.last_restart = None
         self.crashes = []
         self.workers = []
         self.exc_info = None
@@ -86,6 +88,12 @@ class Controller():
 
                     worker.restart()
 
+                if self.restart_interval != 0 and time.perf_counter() - self.last_restart >= self.restart_interval:
+                    self.last_restart = time.perf_counter()
+                    for worker in self.workers:
+                        worker.kill()
+                        worker.restart()
+
             except:
                 self.exc_info = sys.exc_info()
                 time.sleep(self.update_interval*2) # required bc of infinite lock
@@ -105,6 +113,7 @@ class Controller():
             w.start()
         
         Statistics.starttime = time.perf_counter()
+        self.last_restart = Statistics.starttime
 
         Thread(target=self.t_watch_workers).start()
         

@@ -9,3 +9,5 @@ parser.add_argument('-corpus_dir','-s',type=str,metavar='dir',help='directory to
 parser.add_argument('-binary_path','-b',type=str,metavar='path',help='path to the worker executable. Default ./bin/worker',default="./bin/worker")
 parser.add_argument('-max_hangtime','-t',type=float,metavar='sec',help='time that may ellapse since no additional samples processed in seconds \
                                                                         before the fuzz target is considered hanging. Default 10.0',default=10.0)
+parser.add_argument('-restart_interval','-r',type=int,metavar='sec',help='time between restarting fuzzing workers in seconds. Useful when fuzzing \
+                                                                        codepaths with memory leaks. 0 for no restarts. Default 0 seconds',default=0)
