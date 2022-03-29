@@ -26,25 +26,32 @@ void Runner::load_fileformat(Communicator& com, cimg_library::CImg<unsigned char
     #define EXTENSION(x) com.current_extension.compare(x) == 0
     #define LOAD(x) img._load_##x(vfile,"")
 
-    if (EXTENSION("bmp")){
-        LOAD(bmp);
+    if (EXTENSION("ascii")){
+        LOAD(ascii);
+    }
+    else if (EXTENSION("hdr") || EXTENSION("nii")){
+        img._load_analyze(vfile,"",0);
+    }
+    else if(EXTENSION("inr")){
+        img._load_inr(vfile,"",0);
     }
     else if (EXTENSION("pnm") || EXTENSION("ppm") || EXTENSION("pgm")){
         LOAD(pnm);
-    }else if (EXTENSION("ascii")){
-        LOAD(ascii);
-    }else if (EXTENSION("png")){
-        img._load_png(vfile,"",0);
-    }else if (EXTENSION("hdr") || EXTENSION("nii")){
-        img._load_analyze(vfile,"",0);
-    }else if (EXTENSION("jpeg") || EXTENSION("jpg")){
-        LOAD(jpeg);
-    }else if (EXTENSION("dlm")){
-        LOAD(dlm);
-    }else if(EXTENSION("inr")){
-        img._load_inr(vfile,"",0);
-    }else if (EXTENSION("pan") || EXTENSION("pandore")){
+    }
+    else if (EXTENSION("bmp")){
+        LOAD(bmp);
+    }
+    else if (EXTENSION("pan") || EXTENSION("pandore")){
         LOAD(pandore);
+    }
+    else if (EXTENSION("dlm")){
+        LOAD(dlm);
+    }
+    else if (EXTENSION("jpeg") || EXTENSION("jpg")){
+        LOAD(jpeg);
+    }
+    else if (EXTENSION("png")){
+        img._load_png(vfile,"",0);
     }
     else{
         LOG("[-] no extension handler defined for extension %s",com.current_extension.c_str());
