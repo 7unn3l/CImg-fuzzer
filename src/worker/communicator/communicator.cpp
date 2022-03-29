@@ -57,6 +57,7 @@ void Communicator::wait_for_controller(){
 
     while (1){
         if (shm_buf[0] != 0){
+            shm_buf[0] = 0;
             break;
         }
     }
