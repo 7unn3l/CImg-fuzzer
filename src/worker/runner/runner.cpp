@@ -53,6 +53,9 @@ void Runner::load_fileformat(Communicator& com, cimg_library::CImg<unsigned char
     else if (EXTENSION("png")){
         img._load_png(vfile,"",0);
     }
+    else if (EXTENSION("pfm")){
+        LOAD(pfm);
+    }
     else{
         LOG("[-] no extension handler defined for extension %s",com.current_extension.c_str());
         exit(1);

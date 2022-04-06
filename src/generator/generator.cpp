@@ -45,6 +45,9 @@ int main(int argc,char* argv[]){
     SAVE(pandore); // alias pan
     SAVE(dlm);
 
+    // formats not mentioned as supported natively but found in source code
+    SAVE(pfm);
+
     // external formats
 
     SAVE(jpeg);
