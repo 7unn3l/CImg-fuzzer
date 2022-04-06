@@ -142,8 +142,9 @@ class Controller():
             reason = ''
             if worker.get_retcode() != None:
                 reason = 'crash'
-            elif worker.is_hanging():
-                reason = 'hang'
+            elif self.args.max_hangtime != 0:
+                if worker.is_hanging():
+                    reason = 'hang'
 
             if reason:
                 yield (worker,reason)
