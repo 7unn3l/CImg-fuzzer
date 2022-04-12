@@ -1,4 +1,3 @@
-from dis import findlinestarts
 from controller.controller import Controller
 from cli.cli import parser
 import curses
