@@ -38,7 +38,9 @@ class Controller():
         self.workers = []
         self.exc_info = None
         self._end = False
-        self.ui = Ui()
+        self.ui = None
+        self.supported_extensions = ['ascii','hdr','nii','inr','pnm','ppm','pgm','bmp','pan', \
+                                    'dlm','jpeg','jpg','png','pfm']
     
     def make_crash_dir(self):
         if not os.path.exists(self.crash_dir):
@@ -101,11 +103,21 @@ class Controller():
     def preflight(self):
 
         if not os.path.exists(self.corpus_dir):
-            raise FileNotFoundError(f'corpus directory {os.path.abspath(self.corpus_dir)} does not exist')
+            print(f'corpus directory {os.path.abspath(self.corpus_dir)} does not exist')
+            exit(1)
+
+        for file in os.listdir(self.corpus_dir):
+            fullpath = os.path.abspath(os.path.join(self.corpus_dir,file))
+            
+            if os.path.isfile(fullpath) and not any([fullpath.lower().endswith(ext) for ext in self.supported_extensions]):
+                print(f'filetype of {fullpath} is not supported')
+                exit(1)
 
         self.make_crash_dir()
         
         print(f'starting fuzzing session with {self.num_workers} workers..')
+
+        self.ui = Ui()
 
         for i in range(self.num_workers):
             w = WorkerProcess(str(i),self.args)
@@ -121,7 +133,6 @@ class Controller():
 
 
     def run(self,_):
-        self.preflight()
 
         while not self._end:
 

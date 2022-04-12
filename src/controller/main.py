@@ -11,7 +11,9 @@ if __name__ == '__main__':
     # actually curses.wrapper does already catch and reraise exceptions for us
     # but in this case we want to call c.end() before terminating to ensure
     # that we always clean up shared memory objects on the system.
-
+    
+    c.preflight()
+    
     exc_inf = None
 
     try:
