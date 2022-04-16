@@ -14,11 +14,12 @@ sudo apt install libjpeg-dev libpng-dev -y
 
 otherwise, remove ``-lpng -ljpeg`` in ``/src/worker/Makefile`` and the defines ``cimg_use_png`` and ``cimg_use_jpeg`` in ``/src/worker/conf/CImg_conf.h``
 
-Now you make the worker binary
+make the worker binary
 
 ```
 cd CImg-fuzzer/src/worker && make
 ```
+You can now start fuzzing via ``python3 CImg-fuzzer/src/controller/main.py``
 
 ## Motivation
 
