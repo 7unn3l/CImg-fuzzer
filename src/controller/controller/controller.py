@@ -40,7 +40,7 @@ class Controller():
         self._end = False
         self.ui = None
         self.supported_extensions = ['ascii','hdr','nii','inr','pnm','ppm','pgm','bmp','pan', \
-                                    'dlm','jpeg','jpg','png','pfm']
+                                    'pandore','dlm','jpeg','jpg','png','pfm']
     
     def make_crash_dir(self):
         if not os.path.exists(self.crash_dir):
