@@ -1,5 +1,25 @@
 # Fuzzing CImg
 
+## Installation
+
+```
+git clone --recurse-submodules https://github.com/7unn3l/CImg-fuzzer
+```
+
+If you want to also fuzz png and jpeg handeling, which is the default you must
+
+```
+sudo apt install libjpeg-dev libpng-dev -y
+```
+
+otherwise, remove ``-lpng -ljpeg`` in ``/src/worker/Makefile`` and the defines ``cimg_use_png`` and ``cimg_use_jpeg`` in ``/src/worker/conf/CImg_conf.h``
+
+Now you make the worker binary
+
+```
+cd CImg-fuzzer/src/worker && make
+```
+
 ## Motivation
 
 found unbound malloc when overwriting width and height parameters in jpeg images while fuzzing imgcat (version https://github.com/eddieantonio/imgcat/commit/e0277fa90c1083eb0c73899098dea3b99ef85e0a).
