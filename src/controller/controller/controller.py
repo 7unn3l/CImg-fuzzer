@@ -107,7 +107,7 @@ class Controller():
             exit(1)
         
         if not os.path.exists(self.binary_path):
-            print(f'worker binary {os.path.abspath(self.corpus_dir)} does not exist')
+            print(f'worker binary {os.path.abspath(self.binary_path)} does not exist')
             exit(1)
 
         for file in os.listdir(self.corpus_dir):
