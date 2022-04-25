@@ -105,6 +105,10 @@ class Controller():
         if not os.path.exists(self.corpus_dir):
             print(f'corpus directory {os.path.abspath(self.corpus_dir)} does not exist')
             exit(1)
+        
+        if not os.path.exists(self.binary_path):
+            print(f'worker binary {os.path.abspath(self.corpus_dir)} does not exist')
+            exit(1)
 
         for file in os.listdir(self.corpus_dir):
             fullpath = os.path.abspath(os.path.join(self.corpus_dir,file))
@@ -116,8 +120,7 @@ class Controller():
         self.make_crash_dir()
         
         print(f'starting fuzzing session with {self.num_workers} workers..')
-
-        self.ui = Ui()
+        
 
         for i in range(self.num_workers):
             w = WorkerProcess(str(i),self.args)
@@ -129,6 +132,7 @@ class Controller():
 
         Thread(target=self.t_watch_workers).start()
         
+        self.ui = Ui()
         self.ui.stdscr.clear()
 
 
