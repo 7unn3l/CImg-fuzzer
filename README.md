@@ -38,9 +38,6 @@ The list of currently supported filetypes for fuzzing are
   - .png
   - .pfm (Printer Font Metric)
 
-## Known errors
-- Cimg handles .png and jpeg in a way that causes mem leaks. This was a real pain to detect. Ive implemented user controlled occasional restarts to circumvent these statefull errros where the program exits because there is no RAM left bc of mem leaks. SOMETIMES THE PROGRAM GOES INTO AN INFINTE LOOP(?). My guess for the latter behavior is that it got something todo with either no memory left (but it is a different case then total exhaustion) or that we enter a endless loop, which I could not verify. Either way, jpeg and png parsing are totally weird and caused really many problems during development and testing, because they lead to false positive "hangs"  where if the the single sample would be ran through img.assign or img._load_X in a fresh process, it would *not* hang because the hang is statefull and only happens after processing X png/jpeg images.
-
 ## Trophies 🏆
 
 - [CVE-2022-1325](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1325): RAM exhaustion in bmp and pandore loading
