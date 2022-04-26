@@ -1,5 +1,9 @@
 # Fuzzing CImg
 
+<p align="center">
+  <img src="./tui.png" />
+</p>
+
 This project aims to fuzz the [CImg library](https://github.com/dtschump/CImg). It consits of a worker binary, written in c++, that does the heavy sample processing and an overwatcher, written in python, that reports progress to the tui and saves crashes to disk. The two components communicate via shared memory. Scaling up via multiple worker processes is supported. Im writing this project in my free time.
 
 ## Installation
